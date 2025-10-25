@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.Path;
 
 @RestController
-@RequestMapping("/uploads")
+@RequestMapping("/api/uploads")  // FIXED: Added /api prefix
 @RequiredArgsConstructor
 @Slf4j
 public class FileController {
