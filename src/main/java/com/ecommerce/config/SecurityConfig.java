@@ -63,7 +63,8 @@ public class SecurityConfig {
                                 "/api/items/{id}",
                                 "/api/reviews/item/**",
                                 "/api/contact/submit",
-                                "/uploads/**"
+                                "/uploads/**",
+                                "/api/uploads/**"  // Keep this too for compatibility
                         ).permitAll()
                         // Admin endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
