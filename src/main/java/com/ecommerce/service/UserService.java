@@ -146,8 +146,9 @@ public class UserService {
                 throw new RuntimeException("Invalid email or password");
             }
 
+            // IMPORTANT: Pass "USER" as the role, NOT "ROLE_USER"
             String token = jwtUtil.generateToken(user.getUseremail(), "USER");
-            log.info("Login successful for email: {}", request.getEmail());
+            log.info("Login successful for email: {}, Token contains role: USER", request.getEmail());
 
             return new AuthResponse(token, user.getUseremail(), user.getUsername());
         } catch (Exception e) {

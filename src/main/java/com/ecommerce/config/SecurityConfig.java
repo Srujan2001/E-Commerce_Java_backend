@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
+                        // Public endpoints - ANYONE can access
                         .requestMatchers(
                                 "/api/admin/register",
                                 "/api/admin/login",
@@ -64,13 +64,35 @@ public class SecurityConfig {
                                 "/api/reviews/item/**",
                                 "/api/contact/submit",
                                 "/uploads/**",
-                                "/api/uploads/**"  // Keep this too for compatibility
+                                "/api/uploads/**"
                         ).permitAll()
-                        // Admin endpoints
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/items/add", "/api/items/update/**", "/api/items/delete/**").hasRole("ADMIN")
-                        // User endpoints
-                        .requestMatchers("/api/user/**", "/api/orders/**", "/api/reviews/add").hasRole("USER")
+
+                        // ADMIN ONLY endpoints - Must have ROLE_ADMIN
+                        .requestMatchers(
+                                "/api/admin/profile",
+                                "/api/admin/dashboard",
+                                "/api/items/add",
+                                "/api/items/update/**",
+                                "/api/items/delete/**",
+                                "/api/items/admin",
+                                "/api/orders/all",
+                                "/api/reviews/all",
+                                "/api/reviews/delete/**",
+                                "/api/contact/all",
+                                "/api/contact/delete/**"
+                        ).hasRole("ADMIN")
+
+                        // USER ONLY endpoints - Must have ROLE_USER
+                        .requestMatchers(
+                                "/api/user/profile",
+                                "/api/user/dashboard",
+                                "/api/orders/create",
+                                "/api/orders/verify",
+                                "/api/orders/my-orders",
+                                "/api/orders/{id}",
+                                "/api/reviews/add"
+                        ).hasRole("USER")
+
                         // Any other request must be authenticated
                         .anyRequest().authenticated()
                 )

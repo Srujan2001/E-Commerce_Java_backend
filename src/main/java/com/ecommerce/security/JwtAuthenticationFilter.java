@@ -35,6 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = jwtUtil.extractUsername(jwt);
                 String role = jwtUtil.extractRole(jwt);
 
+                log.debug("JWT Filter - Username: {}, Role: {}, Path: {}", username, role, request.getRequestURI());
+
                 if (username != null && jwtUtil.validateToken(jwt, username)) {
                     SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -43,11 +45,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    log.debug("Set authentication for user: {}", username);
+                    log.debug("Set authentication for user: {} with role: ROLE_{}", username, role);
+                } else {
+                    log.warn("Token validation failed for username: {}", username);
                 }
             }
         } catch (Exception e) {
-            log.error("Cannot set user authentication", e);
+            log.error("Cannot set user authentication: ", e);
         }
 
         filterChain.doFilter(request, response);

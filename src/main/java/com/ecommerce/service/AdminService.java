@@ -171,8 +171,9 @@ public class AdminService {
                 throw new RuntimeException("Invalid email or password");
             }
 
+            // IMPORTANT: Pass "ADMIN" as the role, NOT "ROLE_ADMIN"
             String token = jwtUtil.generateToken(admin.getAdminEmail(), "ADMIN");
-            log.info("Admin login successful: {}", request.getEmail());
+            log.info("Admin login successful: {}, Token contains role: ADMIN", request.getEmail());
 
             return new AuthResponse(token, admin.getAdminEmail(), admin.getAdminUsername());
         } catch (Exception e) {
